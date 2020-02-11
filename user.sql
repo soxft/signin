@@ -11,4 +11,23 @@ CREATE TABLE `user` (
   `ip` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `history`;
+CREATE TABLE `history` (
+  `time` mediumtext NOT NULL,
+  `timec` mediumtext NOT NULL,
+  `times` mediumtext NOT NULL,
+  `y` mediumtext NOT NULL,
+  `n` mediumtext NOT NULL,
+  `name` mediumtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `log`;
+CREATE TABLE `log` (
+  `type` mediumtext NOT NULL,
+  `content` mediumtext NOT NULL,
+  `ip` mediumtext NOT NULL,
+  `time` mediumtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
