@@ -28,6 +28,6 @@ elseif (getenv("REMOTE_ADDR"))
 }
 else
 {
-    $ip = "Unknown";
+    $ip = "";
 }
 ?>

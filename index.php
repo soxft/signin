@@ -1,56 +1,74 @@
 <?php
-require_once('ip.php');
-$time = time();
-$conn = mysqli_connect("localhost","","","");
-if (isset($_POST['submit'])) {
-  $name = $_POST['name'];
-  $sql = "SELECT * FROM `user` where name = '$name'";
-  $re = mysqli_query($conn,$sql);
-  $arr = mysqli_fetch_assoc($re);
-  if (empty($arr['name'])) {
-    echo "<h1>非本班同学!</h1><br />";
-    echo "<h1>部分同学可能因姓名录入错误,请群内联系予以修改!</h1>";
-    exit();
-  }
-  if (!empty($arr['time'])) {
-    echo "<h1>您已经签过到了</h1>";
-    exit();
-  } else {
-  $checkip = "SELECT * FROM `user` where ip = '$ip'";
-  $recheckip = mysqli_query($conn,$checkip);
-  $arr = mysqli_fetch_assoc($recheckip);
-  if(!empty($arr)){
-     echo "<h1>同一ip只能签到一次!</h1>";
-     exit();
-  }
-    $sql = "update `user` SET time = '$time' , ip='$ip' where name ='$name'";
-    $re = mysqli_query($conn,$sql);
-    echo "<h1>签到成功!</h1>";
-  }
-} else {
-  ?>
-  <!DOCTYPE html>
-  <html lang="zh-cn">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TZGJZX Class 2 签到系统</title>
-  </head>
-  <body>
-    <h1>TZGJZX Class 2 签到系统</h1>
-    <p>
-      Time: <?php echo date("m月d日H时i分s秒") ?>
-    </p>
-    <form action="" method="post">
-      <input type="text" maxlength="10" placeholder="姓名" name="name" />
-      <br /><br />
-      <input type="submit" name="submit" value="签到" />
-    </form>
-    <br /><br />
-    <a href="./status.php">签到状态</a>
-  </body>
-</html>
-<?php
+if($_GET['s'] == "s")
+{
+  header("Refresh:0;url=\"./status.php\"");
+  exit();
 }
 ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="Cache-Control" content="no-siteapp" />
+        <title>TZGJZX Class 2 Signin</title>
+        <link rel="stylesheet" href="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css">
+        <script src="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
+    </head>
+    <header class="mdui-appbar mdui-appbar-fixed">
+        <body background="https://time.xsot.cn/img/background.png" class="mdui-appbar-with-toolbar">
+            <div class="mdui-toolbar mdui-color-theme"> <a class="mdui-typo-title">高一(2)班签到系统</a>
+
+            </div>
+    </header>
+    <br />
+    <div class="mdui-container doc-container">
+        <div class="mdui-typo">
+             <h2>签到</h2>
+            <p>当前时间:
+                <?php echo date( "H时i分s秒") ?>
+            </p>
+            <div class="mdui-textfield">
+                <input id="name" time="name" class="mdui-textfield-input" type="text" placeholder="姓名" />
+            </div>
+            <br>
+            <center>
+            <button onClick="Submit();" id="Submit" class="mdui-btn mdui-btn-dense mdui-color-grey-300"><i class="mdui-icon material-icons">&#xe569;</i></button>
+            </center>
+        </div>
+    </div>
+    <br />
+    <div class="mdui-container">
+    <div class="mdui-typo">
+      <h2 class="doc-chapter-title doc-chapter-title-first">注意</h2>
+      &emsp;你可以在每天的 6:50-7:10 | 13:20-13:40 | 18:20-18:40 进行签到<br />
+    </div>
+    </div>
+    <br />
+    <script>
+    function Submit() {
+        document.getElementById("Submit").innerHTML = "签到中...";
+        var name = document.getElementById("name").value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "./submit.php");
+        xhr.setRequestHeader('Content-Type', ' application/x-www-form-urlencoded');
+        xhr.send("name=" + name);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                document.getElementById("Submit").innerHTML =
+                    "<i class=\"mdui-icon material-icons\">&#xe569;</i>";
+                if (xhr.responseText == 200) {
+                    mdui.dialog({
+                        title: '签到成功',
+                        content: '学习这件事不在乎有没有人教你，最重要的是在于你自己有没有觉悟和恒心.<br />--法国昆虫学家,动物行为学家,文学家 法布尔',
+                        modal: true
+                    });
+                } else {
+                    mdui.alert(xhr.responseText, '签到失败');
+                }
+            }
+        }
+    }
+    </Script>
+    </body>
+</html>
