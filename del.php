@@ -3,7 +3,7 @@ require_once('ip.php');
 $time = time();
 $conn = mysqli_connect("localhost","qd","qdqdqd","qd");
 $passwd = $_GET['p'];
-if ($passwd == "tzgjzxtj") {
+if ($passwd == "passwd") {
   //主体
   $i = 0;
   //未签到人数初始化
